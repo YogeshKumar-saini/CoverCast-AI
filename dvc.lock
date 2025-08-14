@@ -1,0 +1,74 @@
+schema: '2.0'
+stages:
+  load_data:
+    cmd: python src/load_data.py --config=params.yaml
+    deps:
+    - path: data_given/insurance.csv
+      hash: md5
+      md5: 9cbb5efb71d30e156bcd1033a7adf51f
+      size: 346256
+    - path: src/get_data.py
+      hash: md5
+      md5: f32142cdb01df8897ecf98fd7e6770f7
+      size: 630
+    - path: src/load_data.py
+      hash: md5
+      md5: 01806b9892c948e229b8560f491440f7
+      size: 546
+    outs:
+    - path: data/raw/insurance.csv
+      hash: md5
+      md5: 9fc800bf18292e919b6452c79f52bd45
+      size: 345338
+  split_data:
+    cmd: python src/split_data.py --config=params.yaml
+    deps:
+    - path: data/raw/insurance.csv
+      hash: md5
+      md5: 9fc800bf18292e919b6452c79f52bd45
+      size: 345338
+    - path: src/split_data.py
+      hash: md5
+      md5: 6c50b8bfac8d1c9ad7d7478409dd1dde
+      size: 1343
+    outs:
+    - path: data/processed/test_insurance.csv
+      hash: md5
+      md5: e19cbae1aaea6193e8c10f36e50f602d
+      size: 69418
+    - path: data/processed/train_insurance.csv
+      hash: md5
+      md5: 77a5f3bf052c1619b91fa22b1edc59a3
+      size: 276184
+  train_and_evaluate:
+    cmd: python src/train_and_evaluate.py --config=params.yaml
+    deps:
+    - path: data/processed/test_insurance.csv
+      hash: md5
+      md5: e19cbae1aaea6193e8c10f36e50f602d
+      size: 69418
+    - path: data/processed/train_insurance.csv
+      hash: md5
+      md5: 77a5f3bf052c1619b91fa22b1edc59a3
+      size: 276184
+    - path: src/train_and_evaluate.py
+      hash: md5
+      md5: 330768f7aee8eb118160d5e0673e2bcb
+      size: 2519
+    params:
+      params.yaml:
+        estimators.ElasticNet.params.alpha: 0.9
+        estimators.ElasticNet.params.l1_ratio: 0.89
+    outs:
+    - path: reports/params.json
+      hash: md5
+      md5: aa5d07af4a2188964e9e184267629331
+      size: 42
+    - path: reports/scores.json
+      hash: md5
+      md5: 437e684930b62c8d1880d3619b40eaa4
+      size: 93
+    - path: saved_models/model.joblib
+      hash: md5
+      md5: 41b7168ed19ffe90ba1e8b37427774e2
+      size: 1407

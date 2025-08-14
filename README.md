@@ -225,7 +225,7 @@ This enhanced version includes:
 
 * Badges for Python, Flask, Scikit-learn, license, and CI/CD
 * Dataset overview & model evaluation table
-* Detailed workflow
+* Detailed workflow of project
 * Clear MLOps architecture & CI/CD description
 * System requirements
 

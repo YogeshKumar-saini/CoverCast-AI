@@ -35,3 +35,4 @@ stages:
         cache: false
     outs:
     - saved_models/model.joblib
+    - prediction_service/model/model.joblib

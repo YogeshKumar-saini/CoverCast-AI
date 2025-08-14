@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance price prediction web application</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="icon" href="/static/img/insurance-logo.png">
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="/static/img/insurance-logo.png" alt="">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="section-body">
+        <div class="insurance-detail">
+           <h2>Insurance price prediction</h2>
+           
+           <!-- Prediction Form -->
+           <form method="POST">
+                <div class="form-group">
+                    <label for="age">Age (18-64):</label>
+                    <input type="number" name="age" id="age" min="18" max="64" placeholder="Enter your age">
+                </div>
+
+                <div class="form-group">
+                    <label for="sex">Sex:</label>
+                    <select name="sex" id="sex" class="custom-style">
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bmi">BMI:</label>
+                    <input type="number" name="bmi" id="bmi" step="0.1" placeholder="Enter your BMI">
+                </div>
+
+                <div class="form-group">
+                    <label for="children">Number of Children:</label>
+                    <input type="number" name="children" id="children" min="0" placeholder="Enter number of children">
+                </div>
+
+                <div class="form-group">
+                    <label for="smoker">Smoker:</label>
+                    <select name="smoker" id="smoker" class="custom-style">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="region">Region:</label>
+                    <select name="region" id="region" class="custom-style">
+                        <option value="SouthWest">SouthWest</option>
+                        <option value="SouthEast">SouthEast</option>
+                        <option value="NorthWest">NorthWest</option>
+                        <option value="NorthEast">NorthEast</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Predict" class="btn-submit">
+                </div>
+                
+                <!-- Optional AI Prompt Input -->
+                <div class="form-group">
+                    <label for="ai_prompt">Ask AI for advice or explanation:</label>
+                    <input type="text" name="ai_prompt" id="ai_prompt" placeholder="E.g., How can I reduce my premium?">
+                </div>
+           </form>
+
+           <!-- Prediction Output -->
+            <div class="response-me">
+                {% if response_int %}
+                    <h3 style="font-size: 2.2rem;">Predicted Premium</h3><br>
+                    <h1 style="font-size: 2.2rem;color: rgb(184, 6, 65); margin-bottom: 6px;">${{response_int}}</h1>
+                    <h1 style="font-size: 1.7rem; color: rgb(9, 154, 31);">{{response}}</h1>
+                {% endif %}
+            </div>
+
+            <!-- AI Advice Output -->
+            <div class="response-ai">
+                {% if ai_response %}
+                    <h3 style="font-size: 1.8rem; margin-top: 20px;">AI Advice / Explanation:</h3>
+                    <p style="font-size: 1.2rem; color: #0077b6;">{{ ai_response }}</p>
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="img-insure">
+            <img src="/static/img/home.png" alt="">
+        </div>
+    </div>
+</body>
+</html>

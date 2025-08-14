@@ -5,8 +5,8 @@ stages:
     deps:
     - path: data_given/insurance.csv
       hash: md5
-      md5: 9cbb5efb71d30e156bcd1033a7adf51f
-      size: 346256
+      md5: 1e336f97963437f5f9579ae9ca385680
+      size: 50264
     - path: src/get_data.py
       hash: md5
       md5: f32142cdb01df8897ecf98fd7e6770f7
@@ -18,57 +18,61 @@ stages:
     outs:
     - path: data/raw/insurance.csv
       hash: md5
-      md5: 9fc800bf18292e919b6452c79f52bd45
-      size: 345338
+      md5: 9d39924c3a8417878543b27ca3969bcf
+      size: 55876
   split_data:
     cmd: python src/split_data.py --config=params.yaml
     deps:
     - path: data/raw/insurance.csv
       hash: md5
-      md5: 9fc800bf18292e919b6452c79f52bd45
-      size: 345338
+      md5: 9d39924c3a8417878543b27ca3969bcf
+      size: 55876
     - path: src/split_data.py
       hash: md5
-      md5: 6c50b8bfac8d1c9ad7d7478409dd1dde
-      size: 1343
+      md5: bf0b52a5de6300127008bb07d2c798e2
+      size: 1291
     outs:
     - path: data/processed/test_insurance.csv
       hash: md5
-      md5: e19cbae1aaea6193e8c10f36e50f602d
-      size: 69418
+      md5: e8fed25519b13e9a7fa2915817e42cb8
+      size: 7686
     - path: data/processed/train_insurance.csv
       hash: md5
-      md5: 77a5f3bf052c1619b91fa22b1edc59a3
-      size: 276184
+      md5: 73dbb213263d81df7e53700965eebc48
+      size: 30601
   train_and_evaluate:
     cmd: python src/train_and_evaluate.py --config=params.yaml
     deps:
     - path: data/processed/test_insurance.csv
       hash: md5
-      md5: e19cbae1aaea6193e8c10f36e50f602d
-      size: 69418
+      md5: e8fed25519b13e9a7fa2915817e42cb8
+      size: 7686
     - path: data/processed/train_insurance.csv
       hash: md5
-      md5: 77a5f3bf052c1619b91fa22b1edc59a3
-      size: 276184
+      md5: 73dbb213263d81df7e53700965eebc48
+      size: 30601
     - path: src/train_and_evaluate.py
       hash: md5
-      md5: 330768f7aee8eb118160d5e0673e2bcb
-      size: 2519
+      md5: 43d05099c0ecb88c9d357627a180b52f
+      size: 2731
     params:
       params.yaml:
         estimators.ElasticNet.params.alpha: 0.9
         estimators.ElasticNet.params.l1_ratio: 0.89
     outs:
+    - path: prediction_service/model/model.joblib
+      hash: md5
+      md5: 9fc1962e67d3b64bdf9f0b1bd668f9d2
+      size: 1055
     - path: reports/params.json
       hash: md5
       md5: aa5d07af4a2188964e9e184267629331
       size: 42
     - path: reports/scores.json
       hash: md5
-      md5: 437e684930b62c8d1880d3619b40eaa4
+      md5: 35e8b7cf764bc1021c2cbc638a289e96
       size: 93
     - path: saved_models/model.joblib
       hash: md5
-      md5: 41b7168ed19ffe90ba1e8b37427774e2
-      size: 1407
+      md5: 9fc1962e67d3b64bdf9f0b1bd668f9d2
+      size: 1055

@@ -13,6 +13,7 @@ from get_data import read_params
 import argparse
 import joblib
 import json
+import shutil
 
 def eval_metrics(actual, pred):
     rmse = np.sqrt(mean_squared_error(actual,pred))
@@ -70,6 +71,13 @@ def train_and_evaluate(config_path):
     os.makedirs(model_dir, exist_ok=True)
     model_path = os.path.join(model_dir,"model.joblib")
     joblib.dump(lr, model_path)
+
+
+    # Also save model for webapp
+    webapp_model_dir = config["webapp_model_dir"]
+    os.makedirs(os.path.dirname(webapp_model_dir), exist_ok=True)
+    shutil.copy(model_path, webapp_model_dir)
+
 
 
 

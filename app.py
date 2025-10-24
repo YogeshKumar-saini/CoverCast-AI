@@ -53,17 +53,69 @@ def predict(data: pd.DataFrame):
         return None
 
 
-# Gemini chat generation
-def generate_text(prompt: str, retries=1) -> str:
+# Fallback advice generation
+def generate_fallback_advice(age, sex, bmi, children, smoker, region, predicted_cost):
+    advice_parts = []
+
+    # Age-based advice
+    if age < 30:
+        advice_parts.append("As a younger adult, you may benefit from high-deductible plans with lower premiums.")
+    elif age > 50:
+        advice_parts.append("Consider comprehensive plans that cover preventive care and chronic conditions.")
+
+    # BMI-based advice
+    if bmi > 30:
+        advice_parts.append("Maintaining a healthy weight can significantly reduce your insurance costs over time.")
+    elif bmi < 25:
+        advice_parts.append("Your healthy BMI puts you in a lower risk category for many insurers.")
+
+    # Smoker advice
+    if smoker == 1:
+        advice_parts.append("Quitting smoking could reduce your premiums by up to 50% after a few years.")
+    else:
+        advice_parts.append("As a non-smoker, you're already in a lower premium bracket.")
+
+    # Children advice
+    if children > 2:
+        advice_parts.append("Families with multiple children should look for family plans with good pediatric coverage.")
+
+    # Cost-based advice
+    cost_float = float(predicted_cost)
+    if cost_float > 10000:
+        advice_parts.append("Your predicted premium is above average. Consider shopping around for quotes from multiple insurers.")
+    elif cost_float < 5000:
+        advice_parts.append("Your predicted premium is below average - great job maintaining healthy lifestyle factors!")
+
+    # General advice
+    advice_parts.append("Remember to review your policy annually and consider your changing healthcare needs.")
+
+    return " ".join(advice_parts[:3])  # Return up to 3 pieces of advice
+
+# Gemini text generation
+def generate_text(prompt: str, retries=2) -> str:
     for i in range(retries + 1):
         try:
-            model = genai.get_model("gemini-2.5-t")
-            response = model.chat([{"role": "user", "content": prompt}])
-            if response.last:
-                return str(response.last)
+            model = genai.GenerativeModel('gemini-1.5-flash')
+            response = model.generate_content(prompt)
+            if response and response.text:
+                return response.text.strip()
         except Exception as e:
             logging.warning(f"GenAI attempt {i+1} failed: {e}")
-    return "Sorry, could not generate advice."
+            if i < retries:  # Don't sleep on the last attempt
+                import time
+                time.sleep(1)  # Brief pause between retries
+
+    # If AI fails, provide fallback advice
+    logging.info("Using fallback advice generation")
+    return "AI advice is currently unavailable. Here's some general guidance: " + generate_fallback_advice(
+        age=int(prompt.split('Age: ')[1].split('\n')[0]),
+        sex=0 if 'Female' in prompt else 1,
+        bmi=float(prompt.split('BMI: ')[1].split('\n')[0]),
+        children=int(prompt.split('Children: ')[1].split('\n')[0]),
+        smoker=0 if 'Smoker: No' in prompt else 1,
+        region=prompt.split('Region: ')[1].split('\n')[0],
+        predicted_cost=prompt.split('Predicted Insurance Cost: $')[1].split('.')[0]
+    )
 
 # Flask route
 @app.route("/", methods=["GET", "POST"])
@@ -123,4 +175,6 @@ def about():
     return render_template("about.html")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    port = int(os.environ.get('PORT', 8080))
+    debug_mode = os.environ.get('FLASK_ENV') != 'production'
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)

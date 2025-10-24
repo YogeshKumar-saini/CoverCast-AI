@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: covercast-ai
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    envVars:
+      - key: API_KEY
+        sync: false
+      - key: FLASK_ENV
+        value: production
+    healthCheckPath: /

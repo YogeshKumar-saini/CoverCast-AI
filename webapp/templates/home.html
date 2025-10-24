@@ -26,59 +26,72 @@
 
     <div class="section-body">
         <div class="insurance-detail">
-           <h2>Insurance price prediction</h2>
-           
+           <h2>Insurance Price Prediction</h2>
+           <p class="subtitle">Get an instant estimate for your health insurance premium</p>
+
            <!-- Prediction Form -->
-           <form method="POST">
-                <div class="form-group">
-                    <label for="age">Age (18-64):</label>
-                    <input type="number" name="age" id="age" min="18" max="64" placeholder="Enter your age">
+           <form method="POST" id="predictionForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age">Age (18-64):</label>
+                        <input type="number" name="age" id="age" min="18" max="64" placeholder="Enter your age" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sex">Sex:</label>
+                        <select name="sex" id="sex" class="custom-style" required>
+                            <option value="" disabled selected>Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="sex">Sex:</label>
-                    <select name="sex" id="sex" class="custom-style">
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="bmi">BMI:</label>
+                        <input type="number" name="bmi" id="bmi" step="0.1" min="10" max="50" placeholder="Enter your BMI" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="children">Number of Children:</label>
+                        <input type="number" name="children" id="children" min="0" max="10" placeholder="0" required>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="bmi">BMI:</label>
-                    <input type="number" name="bmi" id="bmi" step="0.1" placeholder="Enter your BMI">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="smoker">Smoker:</label>
+                        <select name="smoker" id="smoker" class="custom-style" required>
+                            <option value="" disabled selected>Select option</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="region">Region:</label>
+                        <select name="region" id="region" class="custom-style" required>
+                            <option value="" disabled selected>Select region</option>
+                            <option value="SouthWest">SouthWest</option>
+                            <option value="SouthEast">SouthEast</option>
+                            <option value="NorthWest">NorthWest</option>
+                            <option value="NorthEast">NorthEast</option>
+                        </select>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="children">Number of Children:</label>
-                    <input type="number" name="children" id="children" min="0" placeholder="Enter number of children">
-                </div>
-
-                <div class="form-group">
-                    <label for="smoker">Smoker:</label>
-                    <select name="smoker" id="smoker" class="custom-style">
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="region">Region:</label>
-                    <select name="region" id="region" class="custom-style">
-                        <option value="SouthWest">SouthWest</option>
-                        <option value="SouthEast">SouthEast</option>
-                        <option value="NorthWest">NorthWest</option>
-                        <option value="NorthEast">NorthEast</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <input type="submit" value="Predict" class="btn-submit">
-                </div>
-                
                 <!-- Optional AI Prompt Input -->
+                <div class="form-group ai-prompt-group">
+                    <label for="ai_prompt">💡 Ask AI for personalized advice:</label>
+                    <input type="text" name="ai_prompt" id="ai_prompt" placeholder="E.g., How can I reduce my premium? What factors affect my rate?">
+                </div>
+
                 <div class="form-group">
-                    <label for="ai_prompt">Ask AI for advice or explanation:</label>
-                    <input type="text" name="ai_prompt" id="ai_prompt" placeholder="E.g., How can I reduce my premium?">
+                    <button type="submit" id="submitBtn" class="btn-submit">
+                        <span id="btnText">Predict Premium</span>
+                        <span id="btnLoading" class="loading" style="display: none;"></span>
+                    </button>
                 </div>
            </form>
 
@@ -92,10 +105,16 @@
             </div>
 
             <!-- AI Advice Output -->
-            <div class="response-ai">
+            <div class="response-ai {% if ai_response and "unavailable" in ai_response.lower() %}fallback{% endif %}">
                 {% if ai_response %}
-                    <h3 style="font-size: 1.8rem; margin-top: 20px;">AI Advice / Explanation:</h3>
-                    <p style="font-size: 1.2rem; color: #0077b6;">{{ ai_response }}</p>
+                    <h3 style="font-size: 1.8rem; margin-top: 20px;">
+                        {% if "unavailable" in ai_response.lower() %}
+                            💡 General Insurance Tips:
+                        {% else %}
+                            🤖 AI Advice / Explanation:
+                        {% endif %}
+                    </h3>
+                    <p style="font-size: 1.2rem;">{{ ai_response }}</p>
                 {% endif %}
             </div>
 
@@ -105,5 +124,7 @@
             <img src="/static/img/home.png" alt="">
         </div>
     </div>
+
+    <script src="/static/scripts/main.js"></script>
 </body>
 </html>

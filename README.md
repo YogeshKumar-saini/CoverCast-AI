@@ -105,7 +105,7 @@ CI/CD ensures the project is **rapidly deployable and maintainable**. Any code o
 
 ```bash
 git clone https://github.com/YogeshKumar-saini/CoverCast-AI.git
-cd CoverCast-AI.
+cd CoverCast-AI
 ```
 
 ### Create & Activate Conda Environment
@@ -121,13 +121,65 @@ conda activate venv/
 pip install -r requirements.txt
 ```
 
+### Setup Environment Variables
+
+```bash
+cp .env.example .env
+# Edit .env and add your Gemini API key
+```
+
 ### Run Flask Application
 
 ```bash
 python app.py
 ```
 
-Visit `http://127.0.0.1:5000` in your browser.
+Visit `http://127.0.0.1:8080` in your browser.
+
+---
+
+## 🌐 Deployment Options
+
+### Quick Deployment (Recommended)
+
+**🎯 Render (Easiest & Free)**
+```bash
+# 1. Push to GitHub
+git add .
+git commit -m "Ready for deployment"
+git push origin main
+
+# 2. Deploy on Render
+# Visit https://render.com, connect GitHub, and deploy!
+# Add API_KEY environment variable in Render dashboard
+```
+
+**Alternative Platforms:**
+- **Railway** - Quick setup, $5 monthly credit
+- **PythonAnywhere** - Python-specific, simple interface
+- **Vercel** - Serverless, good for global CDN
+
+### Deployment Preparation
+
+Run the deployment helper script:
+```bash
+./deploy.sh
+```
+
+This script checks:
+- ✅ Environment variables (.env file)
+- ✅ Model file (saved_models/model_pipeline.joblib)
+- ✅ Dependencies (requirements.txt)
+
+### Files Created for Deployment
+
+- `render.yaml` - Render platform configuration
+- `Procfile` - Heroku-style process definition
+- `.env.example` - Environment variables template
+- `requirements.txt` - Python dependencies
+- `DEPLOYMENT_GUIDE.md` - Detailed deployment instructions
+
+📖 **See [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md) for complete deployment instructions**
 
 ---
 

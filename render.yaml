@@ -3,10 +3,12 @@ services:
     name: covercast-ai
     runtime: python
     buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
+    startCommand: gunicorn app:app
     envVars:
       - key: API_KEY
         sync: false
       - key: FLASK_ENV
         value: production
+      - key: PORT
+        value: 10000
     healthCheckPath: /
